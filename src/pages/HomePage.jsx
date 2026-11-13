@@ -192,18 +192,18 @@ export default function HomePage({ onOpenQuote }) {
               </div>
 
               {/* Key Quick Stats */}
-              <div className="pt-4 flex items-center gap-8 border-t border-slate-200 text-xs">
+              <div className="pt-4 grid grid-cols-3 gap-2 sm:flex sm:items-center sm:gap-8 border-t border-slate-200 text-xs">
                 <div>
-                  <span className="font-extrabold text-[#1f2853] text-base block font-industrial">10–1000 KG</span>
-                  <span className="text-slate-500 font-medium">Daily Capacities</span>
+                  <span className="font-extrabold text-[#1f2853] text-sm sm:text-base block font-industrial">10–1000 KG</span>
+                  <span className="text-slate-500 font-medium text-[11px] sm:text-xs">Daily Capacities</span>
                 </div>
                 <div>
-                  <span className="font-extrabold text-[#ff7026] text-base block font-industrial">24 HOURS</span>
-                  <span className="text-slate-500 font-medium">Thermophilic Cycle</span>
+                  <span className="font-extrabold text-[#ff7026] text-sm sm:text-base block font-industrial">24 HOURS</span>
+                  <span className="text-slate-500 font-medium text-[11px] sm:text-xs">Thermophilic Cycle</span>
                 </div>
                 <div>
-                  <span className="font-extrabold text-emerald-600 text-base block font-industrial">85–90%</span>
-                  <span className="text-slate-500 font-medium">Volume Reduction</span>
+                  <span className="font-extrabold text-emerald-600 text-sm sm:text-base block font-industrial">85–90%</span>
+                  <span className="text-slate-500 font-medium text-[11px] sm:text-xs">Volume Reduction</span>
                 </div>
               </div>
 
@@ -211,7 +211,7 @@ export default function HomePage({ onOpenQuote }) {
 
             {/* Right Column: 3D Composter Machine with Live Waste Digestion */}
             <div className="lg:col-span-6 relative flex items-center justify-center">
-              <div className="w-full h-[480px] sm:h-[540px] lg:h-[600px] relative overflow-hidden flex items-center justify-center">
+              <div className="w-full h-[430px] sm:h-[520px] lg:h-[600px] relative overflow-hidden flex items-center justify-center">
                 <iframe
                   src="/3d-hero.html"
                   title="Caxra 3D Composter Machine - Waste Digestion"
