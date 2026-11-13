@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #1f2853;
+    background-color: #ffffff;
+    overflow-x: hidden;
+  }
+  .font-industrial {
+    font-family: 'Oswald', 'Space Grotesk', system-ui, sans-serif;
+    letter-spacing: 0.03em;
+  }
+}
+
+/* Exact Caxra Logo Swirl Gradient */
+.caxra-gradient {
+  background: linear-gradient(135deg, #ff4e46 0%, #ff7026 45%, #ff9900 100%);
+}
+
+.caxra-red-gradient {
+  background: linear-gradient(135deg, #d31e28 0%, #e62c32 100%);
+}
+
+.caxra-gradient-text {
+  background: linear-gradient(135deg, #ff4e46 0%, #ff7026 45%, #ff9900 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.caxra-glow {
+  box-shadow: 0 10px 25px -4px rgba(255, 112, 38, 0.3);
+}
+
+.caxra-glow-red {
+  box-shadow: 0 10px 25px -4px rgba(217, 34, 42, 0.35);
+}

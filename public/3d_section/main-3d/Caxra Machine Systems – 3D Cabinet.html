@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Caxra Machine Systems – 3D Cabinet</title>
+<style>
+:root{--bg:#eceae6;--ink:#2a2826;--panel:#ffffffcc;--accent:#b01418;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1c1b;--ink:#ecebe8;--panel:#2b2928cc}}
+:root[data-theme="dark"]{--bg:#1d1c1b;--ink:#ecebe8;--panel:#2b2928cc}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Barlow","Segoe UI",system-ui,sans-serif;overflow:hidden}
+#view{position:absolute;inset:0}
+canvas{display:block;touch-action:none}
+header{position:absolute;left:20px;top:calc(16px + env(safe-area-inset-top,0px));pointer-events:none}
+h1{margin:0;font-size:1.25rem;font-weight:600;letter-spacing:.01em}
+header p{margin:2px 0 0;font-size:.85rem;opacity:.7}
+.bar{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:94vw}
+button{font:inherit;font-size:.9rem;padding:9px 16px;border-radius:8px;border:1px solid color-mix(in srgb,var(--ink) 25%,transparent);background:var(--panel);color:var(--ink);cursor:pointer;backdrop-filter:blur(6px)}
+button:hover{border-color:var(--accent)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.dims{position:absolute;right:16px;top:calc(16px + env(safe-area-inset-top,0px));background:var(--panel);border:1px solid color-mix(in srgb,var(--ink) 20%,transparent);border-radius:10px;padding:12px 14px;display:grid;gap:8px;font-size:.85rem;backdrop-filter:blur(6px)}
+.dims label{display:grid;grid-template-columns:56px 1fr 40px;align-items:center;gap:8px}
+.dims input{accent-color:var(--accent);width:120px}
+.stats{position:absolute;left:20px;top:calc(72px + env(safe-area-inset-top,0px));font-size:.85rem;background:var(--panel);border:1px solid color-mix(in srgb,var(--ink) 20%,transparent);border-radius:10px;padding:8px 12px;display:grid;gap:2px;pointer-events:none;backdrop-filter:blur(6px)}
+.stats b{color:var(--accent)}
+</style>
+</head>
+<body>
+<div id="view"></div>
+<header><h1>Caxra Machine Systems</h1><p>Drag to rotate, scroll to zoom</p></header>
+<div class="stats"><span>Waste in: <b id="cin">0</b></span><span>Compacted out: <b id="cout">0</b></span></div>
+<div class="dims" aria-label="Cabinet size">
+  <label>Width<input id="sx" type="range" min="40" max="120" value="100"><span id="vx">100%</span></label>
+  <label>Depth<input id="sz" type="range" min="40" max="120" value="100"><span id="vz">100%</span></label>
+  <label>Height<input id="sy" type="range" min="40" max="120" value="100"><span id="vy">100%</span></label>
+</div>
+<div class="bar">
+  <button id="lid" aria-pressed="false">Open lid</button>
+  <button id="feed" aria-pressed="false">Feed waste</button>
+  <button id="spin" aria-pressed="true">Auto-rotate</button>
+  <button id="reset">Reset view</button>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function(){
+const host=document.getElementById('view');
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(35,1,0.1,50);
+const home=new THREE.Vector3(2.4,1.9,2.9);
+camera.position.copy(home);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+host.appendChild(renderer.domElement);
+const controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.target.set(0,0.7,0);controls.enableDamping=true;controls.autoRotate=true;controls.autoRotateSpeed=1.2;
+controls.maxPolarAngle=Math.PI/2+0.05;controls.minDistance=2;controls.maxDistance=9;
+
+scene.add(new THREE.HemisphereLight(0xffffff,0x888080,0.8));
+const sun=new THREE.DirectionalLight(0xffffff,0.7);sun.position.set(3,5,4);scene.add(sun);
+
+const W=1.2,H=1.3,D=1.0,base=0.14;
+const cream=new THREE.MeshStandardMaterial({color:0xf1ece6,roughness:.6,metalness:.1});
+const side=new THREE.MeshStandardMaterial({color:0xc9c5c0,roughness:.55,metalness:.25});
+const dark=new THREE.MeshStandardMaterial({color:0x1b1a19,roughness:.9});
+const metal=new THREE.MeshStandardMaterial({color:0xb8bcc2,roughness:.35,metalness:.8});
+const cab=new THREE.Group();scene.add(cab);
+
+// Body: footprint with recessed centre front (shape y = -z)
+const s=new THREE.Shape();
+[[-.6,-.5],[.6,-.5],[.6,.3],[.2,.3],[.2,.15],[-.2,.15],[-.2,.3],[-.6,.3]].forEach((p,i)=>{i?s.lineTo(p[0],-p[1]):s.moveTo(p[0],-p[1])});
+const g=new THREE.ExtrudeGeometry(s,{depth:H-base,bevelEnabled:false});
+g.rotateX(-Math.PI/2);
+const body=new THREE.Mesh(g,side);body.position.y=base;cab.add(body);
+const edges=new THREE.LineSegments(new THREE.EdgesGeometry(g),new THREE.LineBasicMaterial({color:0x555250}));edges.position.y=base;cab.add(edges);
+
+// Cream top plate (L-shaped, notch matches recess)
+const tg=new THREE.ExtrudeGeometry(s,{depth:.012,bevelEnabled:false});tg.rotateX(-Math.PI/2);
+const top=new THREE.Mesh(tg,cream);top.position.y=H;cab.add(top);
+
+// Recessed front panel (cream) + corner strips
+const panel=new THREE.Mesh(new THREE.PlaneGeometry(.4,H-base),cream);panel.position.set(0,base+(H-base)/2,.1505);cab.add(panel);
+[-.2,.2].forEach(x=>{const st=new THREE.Mesh(new THREE.BoxGeometry(.03,H-base,.16),side);st.position.set(x,base+(H-base)/2,.23);cab.add(st)});
+// wing faces cream
+[-.4,.4].forEach(x=>{const f=new THREE.Mesh(new THREE.PlaneGeometry(.4,H-base),cream);f.position.set(x,base+(H-base)/2,.3005);cab.add(f)});
+
+// Logo texture
+const c=document.createElement('canvas');c.width=512;c.height=640;const x=c.getContext('2d');
+const img=new Image();
+
+x.fillStyle='#f2631c';x.font='600 120px "Barlow","Segoe UI",sans-serif';x.textAlign='center';x.fillText('Caxra',256,470);
+x.fillStyle='#5a2a10';x.font='500 42px "Barlow","Segoe UI",sans-serif';x.fillText('Machine Systems',256,540);
+const tex=new THREE.CanvasTexture(c);img.onload=()=>{x.drawImage(img,96,20,320,330);tex.needsUpdate=true};img.src='data:image/png;base64,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';
+const logo=new THREE.Mesh(new THREE.PlaneGeometry(.3,.375),new THREE.MeshBasicMaterial({map:tex,transparent:true}));
+logo.position.set(0,.78,.152);cab.add(logo);
+
+// Chute opening + tray
+const hole=new THREE.Mesh(new THREE.PlaneGeometry(.2,.26),dark);hole.position.set(0,.3,.152);cab.add(hole);
+const tray=new THREE.Mesh(new THREE.BoxGeometry(.19,.012,.2),metal);tray.position.set(0,.3,.24);tray.rotation.x=.45;cab.add(tray);
+
+// Hopper opening under the lid + lid on hinge
+const open=new THREE.Mesh(new THREE.PlaneGeometry(.6,.5),dark);open.rotation.x=-Math.PI/2;open.position.set(0,H+.013,-.15);cab.add(open);
+const hinge=new THREE.Group();hinge.position.set(0,H+.016,-.4);cab.add(hinge);
+const lid=new THREE.Mesh(new THREE.BoxGeometry(.62,.012,.52),cream);lid.position.z=.26;hinge.add(lid);
+const hb=new THREE.Mesh(new THREE.TorusGeometry(.05,.008,8,16,Math.PI),metal);hb.position.set(.1,.04,.4);hb.rotation.z=0;hinge.add(hb);
+[-.2,.2].forEach(px=>{const h=new THREE.Mesh(new THREE.BoxGeometry(.08,.014,.03),metal);h.position.set(px,0,.01);hinge.add(h)});
+// handle as a U bar
+const bar=new THREE.Mesh(new THREE.CylinderGeometry(.009,.009,.16,10),metal);bar.rotation.z=Math.PI/2;bar.position.set(.1,.055,.4);hinge.add(bar);
+hinge.remove(hb);
+[.02,.18].forEach(dx=>{const p=new THREE.Mesh(new THREE.CylinderGeometry(.009,.009,.05,10),metal);p.position.set(dx,.03,.4);hinge.add(p)});
+
+// Casters
+[[-.5,-.4],[.5,-.4],[-.5,.22],[.5,.22]].forEach(p=>{
+  const br=new THREE.Mesh(new THREE.BoxGeometry(.14,.025,.14),cream);br.position.set(p[0],base-.01,p[1]);cab.add(br);
+  const w=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,.03,20),new THREE.MeshStandardMaterial({color:0x8a8f99,roughness:.5}));
+  w.rotation.z=Math.PI/2;w.position.set(p[0],.05,p[1]);cab.add(w);
+  const f=new THREE.Mesh(new THREE.BoxGeometry(.05,.07,.05),metal);f.position.set(p[0],.09,p[1]);cab.add(f);
+});
+
+// Floor shadow disc
+const sh=new THREE.Mesh(new THREE.CircleGeometry(1.2,48),new THREE.MeshBasicMaterial({color:0x000000,transparent:true,opacity:.12}));
+sh.rotation.x=-Math.PI/2;sh.position.y=-.002;scene.add(sh);
+
+// Waste flow: input falls into hopper, compacted blocks leave via chute
+const led=new THREE.Mesh(new THREE.SphereGeometry(.014,12,12),new THREE.MeshBasicMaterial({color:0x4a4a4a}));led.position.set(.15,1.15,.155);cab.add(led);
+const flow=[],outQ=[],clock=new THREE.Clock();let feeding=false,spawnT=0,absorbed=0,cin=0,cout=0;
+const mat=(c,d)=>new THREE.MeshStandardMaterial({color:c,roughness:.75,side:d?THREE.DoubleSide:THREE.FrontSide});
+const part=(geo,c,sx,sy,sz,d)=>{const m=new THREE.Mesh(geo,mat(c,d));m.scale.set(sx||1,sy||1,sz||1);return m};
+const foods=[
+  ()=>{const g=new THREE.Group();g.add(part(new THREE.SphereGeometry(.035,12,10),0xc0392b));const s=part(new THREE.CylinderGeometry(.003,.003,.02,6),0x5a3a1a);s.position.y=.038;g.add(s);return g},
+  ()=>{const g=new THREE.Group();g.add(part(new THREE.TorusGeometry(.04,.011,8,14,Math.PI*.7),0xf4d03f));return g},
+  ()=>{const g=new THREE.Group();g.add(part(new THREE.BoxGeometry(.07,.07,.018),0xd8b070));return g},
+  ()=>{const g=new THREE.Group();const c=part(new THREE.ConeGeometry(.016,.09,8),0xe67e22);c.rotation.z=Math.PI/2;g.add(c);return g},
+  ()=>{const g=new THREE.Group();g.add(part(new THREE.SphereGeometry(.03,12,10),0xa07850,1.3,.9,1));return g},
+  ()=>{const g=new THREE.Group();g.add(part(new THREE.SphereGeometry(.03,12,6),0x6bb33a,1.6,.12,1.1,true));return g},
+  ()=>{const g=new THREE.Group();g.add(part(new THREE.SphereGeometry(.03,10,8,0,Math.PI*2,0,Math.PI/2),0xf5efe6,1,1,1,true));return g},
+  ()=>{const g=new THREE.Group();g.add(part(new THREE.CylinderGeometry(.035,.035,.012,16),0xf39c12));return g}
+];
+const outGeo=new THREE.BoxGeometry(.04,.035,.04);
+function rnd(a){return a[Math.random()*a.length|0]}
+function spawnIn(){
+  const m=rnd(foods)();m.scale.setScalar(2.4);
+  m.position.set((Math.random()-.5)*.36,H+.9,-.15+(Math.random()-.5)*.28);
+  m.userData={k:'in',vy:0,sp:[Math.random()*4,Math.random()*4,Math.random()*4]};cab.add(m);flow.push(m)}
+function spawnOut(){
+  const m=new THREE.Mesh(outGeo,new THREE.MeshStandardMaterial({color:0x3fa34d,roughness:.7}));
+  m.position.set((Math.random()-.5)*.08,.358,.17);m.rotation.x=.45;
+  m.userData={k:'out',ph:0,vz:.05,vy:0,age:0};cab.add(m);flow.push(m)}
+function updateFlow(){
+  const dt=Math.min(clock.getDelta(),.05),now=clock.elapsedTime,G=2.5;
+  if(feeding&&target){spawnT-=dt;if(spawnT<=0){spawnIn();spawnT=.22+Math.random()*.15}}
+  while(outQ.length&&outQ[0]<=now){outQ.shift();spawnOut();}
+  for(let i=flow.length-1;i>=0;i--){
+    const m=flow[i],u=m.userData;let dead=false;
+    if(u.k==='in'){
+      u.vy-=G*dt;m.position.y+=u.vy*dt;
+      m.rotation.x+=u.sp[0]*dt;m.rotation.y+=u.sp[1]*dt;m.rotation.z+=u.sp[2]*dt;
+      if(m.position.y<H){const k=Math.max(m.scale.x-9*dt,0);m.scale.setScalar(k);
+        if(k<.12){dead=true;cin++;absorbed++;if(absorbed%2===0)outQ.push(now+1.2)}}
+    }else{
+      if(u.ph===0){u.vz+=.5*dt;m.position.z+=u.vz*dt;m.position.y=.358-(m.position.z-.17)*.483;
+        if(m.position.z>.33)u.ph=1}
+      else if(u.ph===1){u.vy-=G*dt;m.position.z+=u.vz*dt;m.position.y+=u.vy*dt;m.rotation.x*=1-3*dt;
+        if(m.position.y<.02){m.position.y=.02;u.ph=2}}
+      else{u.age+=dt;if(u.age>2.5){const k=m.scale.x-2*dt;m.scale.setScalar(Math.max(k,0));if(k<=0){dead=true;cout++}}}
+    }
+    if(dead){cab.remove(m);m.traverse(o=>{if(o.material)o.material.dispose()});flow.splice(i,1)}
+  }
+  led.material.color.setHex(feeding&&target?0x2ecc71:0x4a4a4a);
+  cab.rotation.z=feeding&&target?Math.sin(now*70)*.0008:0;
+  document.getElementById('cin').textContent=cin;document.getElementById('cout').textContent=cout;
+}
+// UI
+let target=0,cur=0;
+const lidBtn=document.getElementById('lid'),spinBtn=document.getElementById('spin');
+function setLid(o){target=o?-1.9:0;lidBtn.setAttribute('aria-pressed',!!target);lidBtn.textContent=target?'Close lid':'Open lid'}
+lidBtn.onclick=()=>setLid(!target);
+const feedBtn=document.getElementById('feed');
+feedBtn.onclick=()=>{feeding=!feeding;feedBtn.setAttribute('aria-pressed',feeding);feedBtn.textContent=feeding?'Stop feeding':'Feed waste';if(feeding)setLid(true)};
+spinBtn.onclick=()=>{controls.autoRotate=!controls.autoRotate;spinBtn.setAttribute('aria-pressed',controls.autoRotate)};
+document.getElementById('reset').onclick=()=>{camera.position.copy(home);controls.target.set(0,.7,0)};
+['x','y','z'].forEach(a=>{const r=document.getElementById('s'+a),v=document.getElementById('v'+a);
+  r.oninput=()=>{cab.scale[a]=r.value/100;v.textContent=r.value+'%'}});
+
+function size(){const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}
+addEventListener('resize',size);size();
+const still=matchMedia('(prefers-reduced-motion:reduce)').matches;if(still){controls.autoRotate=false;spinBtn.setAttribute('aria-pressed',false)}
+(function loop(){requestAnimationFrame(loop);cur+=(target-cur)*(still?1:.08);hinge.rotation.x=cur;updateFlow();controls.update();renderer.render(scene,camera)})();
+})();
+</script>
+</body>
+</html>
