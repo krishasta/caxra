@@ -29,9 +29,6 @@ export default function Footer({ onOpenQuote }) {
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#222] text-[#ff9900] border border-slate-700">
                 🇮🇳 Designed & Made in India
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#222] text-emerald-400 border border-slate-700">
-                ISO Compliant
-              </span>
             </div>
           </div>
 
