@@ -79,8 +79,8 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <span className="font-bold block text-[#1f2853]">Direct Sales & Application Desk</span>
-                      <a href="tel:+919876543210" className="text-xs text-[#ff7026] hover:underline font-bold block">
-                        +91 98765 43210
+                      <a href="tel:+919944479115" className="text-xs text-[#ff7026] hover:underline font-bold block">
+                        +91 99444 79115
                       </a>
                       <a href="tel:+918023456789" className="text-xs text-slate-500 hover:underline block">
                         +91 (080) 2345 6789 (Works Desk)
@@ -119,7 +119,7 @@ export default function ContactPage() {
                 {/* WhatsApp Action */}
                 <div className="pt-4 border-t border-slate-200">
                   <a
-                    href="https://wa.me/919876543210?text=Hello%20Caxra%20Machine%20Systems,%20I%20am%20interested%20in%20your%20composting%20machines/SPMs"
+                    href="https://wa.me/919944479115?text=Hello%20Caxra%20Machine%20Systems,%20I%20am%20interested%20in%20your%20composting%20machines/SPMs"
                     target="_blank"
                     rel="noreferrer"
                     className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-colors"
@@ -231,7 +231,7 @@ export default function ContactPage() {
                           required
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="+91 98765 43210"
+                          placeholder="+91 99444 79115"
                           className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#ff7026] bg-white text-sm"
                         />
                       </div>

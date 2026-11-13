@@ -106,8 +106,8 @@ export default function Footer({ onOpenQuote }) {
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#ff7026] flex-shrink-0" />
-                <a href="tel:+919876543210" className="hover:text-white transition-colors">
-                  +91 98765 43210
+                <a href="tel:+919944479115" className="hover:text-white transition-colors">
+                  +91 99444 79115
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
