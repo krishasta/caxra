@@ -179,3 +179,4 @@ function doGet(e) {
     destination: SALES_EMAIL
   })).setMimeType(ContentService.MimeType.JSON);
 }
+

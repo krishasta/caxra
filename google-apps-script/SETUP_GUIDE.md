@@ -71,3 +71,4 @@ VITE_APPS_SCRIPT_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"
    - Submission Timestamp
    - Quick one-click "Reply to Customer" and "Call Customer" buttons
 2. A new lead row is automatically logged into your Google Sheet for easy CRM tracking!
+
