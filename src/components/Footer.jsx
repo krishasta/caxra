@@ -19,7 +19,7 @@ export default function Footer({ onOpenQuote }) {
                 className="h-10 w-auto bg-white p-1 rounded-lg"
               />
               <span className="text-xl font-bold text-white font-industrial uppercase">
-                CAXRA MACHINE SYSTEMS
+                CAXRA MACHINE SYSTEMS PVT LTD
               </span>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
@@ -101,8 +101,10 @@ export default function Footer({ onOpenQuote }) {
             <ul className="space-y-3 text-xs">
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[#ff7026] flex-shrink-0 mt-0.5" />
-                <span className="text-slate-400">
-                  Manufacturing Hub, Bengaluru / Chennai Industrial Corridor, India
+                <span className="text-slate-400 leading-relaxed">
+                  Caxra Machine Systems Pvt Ltd<br />
+                  29-3, Katoor Street, Kalapatti,<br />
+                  Coimbatore - 641048
                 </span>
               </li>
               <li className="flex items-center gap-2.5">
@@ -124,7 +126,7 @@ export default function Footer({ onOpenQuote }) {
 
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© {new Date().getFullYear()} Caxra Machine Systems. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Caxra Machine Systems Pvt Ltd. All rights reserved.</p>
           <p className="flex items-center gap-1.5">
             Designed & Engineered for Industrial Excellence
           </p>

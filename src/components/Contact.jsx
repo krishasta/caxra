@@ -55,9 +55,9 @@ export default function Contact() {
                     <MapPin className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="font-semibold block text-slate-900">Works & Engineering Unit</span>
+                    <span className="font-semibold block text-slate-900">Caxra Machine Systems Pvt Ltd</span>
                     <span className="text-slate-600 text-xs leading-relaxed">
-                      Industrial Area, Phase II, Bengaluru / Chennai / Coimbatore Corridor, India
+                      29-3, Katoor Street, Kalapatti, Coimbatore - 641048, Tamil Nadu, India
                     </span>
                   </div>
                 </div>

@@ -115,7 +115,7 @@ export default function AboutPage({ onOpenQuote }) {
                   <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
                     <div>
                       <span className="text-[11px] text-slate-500 block">Manufacturing Base</span>
-                      <span className="text-xs font-bold text-[#1f2853]">Bengaluru / Chennai Corridor, India</span>
+                      <span className="text-xs font-bold text-[#1f2853]">Kalapatti, Coimbatore, India</span>
                     </div>
                     <button
                       onClick={onOpenQuote}
