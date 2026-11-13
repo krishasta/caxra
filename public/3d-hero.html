@@ -162,7 +162,7 @@ const host = document.getElementById('view');
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 50);
-const home = new THREE.Vector3(2.5, 1.85, 3.0);
+const home = new THREE.Vector3(2.35, 1.8, 2.8);
 camera.position.copy(home);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -623,14 +623,8 @@ spinBtn.onclick = () => {
 };
 
 document.getElementById('reset').onclick = () => {
-  const isMobile = window.innerWidth < 640 || (host.clientWidth < host.clientHeight);
-  if (isMobile) {
-    camera.position.set(2.8, 1.95, 3.4);
-    controls.target.set(0, 0.72, 0);
-  } else {
-    camera.position.copy(home);
-    controls.target.set(0, 0.68, 0);
-  }
+  camera.position.copy(home);
+  controls.target.set(0, 0.68, 0);
 };
 
 function size() {
@@ -638,18 +632,6 @@ function size() {
   const h = host.clientHeight;
   renderer.setSize(w, h);
   camera.aspect = w / h;
-  
-  // Mobile / portrait framing: pull back slightly so machine & compost have clean breathing room
-  const isMobile = w < 640 || w < h;
-  if (isMobile) {
-    camera.fov = 38;
-    camera.position.set(2.8, 1.95, 3.4);
-    controls.target.set(0, 0.72, 0);
-  } else {
-    camera.fov = 34;
-    camera.position.copy(home);
-    controls.target.set(0, 0.68, 0);
-  }
   camera.updateProjectionMatrix();
 }
 window.addEventListener('resize', size);

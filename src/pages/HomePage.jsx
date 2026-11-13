@@ -211,7 +211,7 @@ export default function HomePage({ onOpenQuote }) {
 
             {/* Right Column: 3D Composter Machine with Live Waste Digestion */}
             <div className="lg:col-span-6 relative flex items-center justify-center">
-              <div className="w-full h-[430px] sm:h-[520px] lg:h-[600px] relative overflow-hidden flex items-center justify-center">
+              <div className="w-full h-[480px] sm:h-[540px] lg:h-[600px] relative overflow-hidden flex items-center justify-center">
                 <iframe
                   src="/3d-hero.html"
                   title="Caxra 3D Composter Machine - Waste Digestion"
