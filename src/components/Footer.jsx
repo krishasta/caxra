@@ -45,7 +45,7 @@ export default function Footer({ onOpenQuote }) {
               </li>
               <li>
                 <Link to="/products" className="hover:text-[#ff7026] transition-colors">
-                  3D Composter Configurator
+                  Composter Configurator
                 </Link>
               </li>
               <li>

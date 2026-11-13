@@ -32,7 +32,7 @@ export default function HomePage({ onOpenQuote }) {
         'Thermostat regulated PID heating jacket & multi-stage exhaust',
         'Capacities: 10, 25, 50, 100, 250, 500, 1000 kg/day'
       ],
-      linkText: 'Configure 3D Models & Sizing',
+      linkText: 'Configure Models & Sizing',
       linkUrl: '/products',
       isPrimary: true
     },
@@ -179,7 +179,7 @@ export default function HomePage({ onOpenQuote }) {
                   to="/products"
                   className="px-8 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider text-white caxra-gradient caxra-glow hover:opacity-95 transition-all shadow-md flex items-center gap-2 cursor-pointer"
                 >
-                  <span>CONFIGURE IN 3D</span>
+                  <span>EXPLORE PRODUCTS</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
 
@@ -244,7 +244,7 @@ export default function HomePage({ onOpenQuote }) {
               to="/products"
               className="text-xs font-bold text-[#ff7026] hover:underline uppercase tracking-wider flex items-center gap-1.5"
             >
-              <span>Explore 3D Configurator</span>
+              <span>Explore Products</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -372,7 +372,7 @@ export default function HomePage({ onOpenQuote }) {
                 to="/products"
                 className="px-6 py-3 rounded-full text-xs sm:text-sm font-bold text-white bg-white/10 hover:bg-white/20 border border-white/20 transition-all"
               >
-                3D Configurator
+                Explore Models
               </Link>
             </div>
           </div>
