@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle, Clock, MessageSquare, ArrowRight } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle, Clock, MessageSquare, ArrowRight, Loader2 } from 'lucide-react';
+import { sendInquiryToSales } from '../services/contactService';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -13,16 +14,28 @@ export default function Contact() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setErrorMessage('');
+    try {
+      await sendInquiryToSales(formData);
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      setErrorMessage('Could not deliver automatically via network. Please email sales@caxra.in or call +91 99444 79115.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <section id="contact" className="py-20 lg:py-28 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold uppercase tracking-wider mb-3">
@@ -37,10 +50,10 @@ export default function Contact() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          
+
           {/* Left Column: Direct Info & Location */}
           <div className="lg:col-span-5 space-y-8">
-            
+
             <div className="bg-slate-50 border border-slate-200/90 rounded-3xl p-8 space-y-6">
               <h3 className="text-xl font-bold text-slate-900">
                 Caxra Machine Systems
@@ -83,11 +96,11 @@ export default function Contact() {
                   </div>
                   <div>
                     <span className="font-semibold block text-slate-900">Email Inquiries</span>
-                    <a href="mailto:sales@caxra.com" className="text-xs text-orange-600 hover:underline font-medium block">
-                      sales@caxra.com
+                    <a href="mailto:sales@caxra.in" className="text-xs text-orange-600 hover:underline font-medium block">
+                      sales@caxra.in
                     </a>
-                    <a href="mailto:support@caxra.com" className="text-xs text-slate-500 hover:underline block">
-                      engineering@caxra.com
+                    <a href="mailto:engineering@caxra.in" className="text-xs text-slate-500 hover:underline block">
+                      engineering@caxra.in
                     </a>
                   </div>
                 </div>
@@ -124,7 +137,7 @@ export default function Contact() {
           {/* Right Column: Interactive Machine Quote Form */}
           <div className="lg:col-span-7">
             <div className="bg-slate-50 border border-slate-200/90 rounded-3xl p-8 sm:p-10 shadow-lg">
-              
+
               {submitted ? (
                 <div className="text-center py-12 space-y-4">
                   <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
@@ -277,12 +290,28 @@ export default function Contact() {
                     ></textarea>
                   </div>
 
+                  {errorMessage && (
+                    <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700">
+                      {errorMessage}
+                    </div>
+                  )}
+
                   <button
                     type="submit"
-                    className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-lg shadow-orange-500/25 transition-all duration-200"
+                    disabled={isSubmitting}
+                    className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 shadow-lg shadow-orange-500/25 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    <span>Submit Machinery Inquiry</span>
-                    <Send className="w-4 h-4" />
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Sending to sales@caxra.in...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Submit Machinery Inquiry</span>
+                        <Send className="w-4 h-4" />
+                      </>
+                    )}
                   </button>
 
                   <p className="text-[11px] text-center text-slate-500">

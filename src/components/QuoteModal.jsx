@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { X, Send, CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
+import { X, Send, CheckCircle2, ShieldCheck, Sparkles, Loader2 } from 'lucide-react';
+import { sendInquiryToSales } from '../services/contactService';
 
 export default function QuoteModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
@@ -13,12 +14,24 @@ export default function QuoteModal({ isOpen, onClose }) {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setErrorMessage('');
+    try {
+      await sendInquiryToSales(formData);
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      setErrorMessage('Could not deliver via network. Please email sales@caxra.in or call +91 99444 79115.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -184,12 +197,28 @@ export default function QuoteModal({ isOpen, onClose }) {
               ></textarea>
             </div>
 
+            {errorMessage && (
+              <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700">
+                {errorMessage}
+              </div>
+            )}
+
             <button
               type="submit"
-              className="w-full py-3.5 px-4 rounded-xl text-xs font-bold text-white caxra-gradient caxra-glow hover:opacity-95 transition-all flex items-center justify-center gap-2"
+              disabled={isSubmitting}
+              className="w-full py-3.5 px-4 rounded-xl text-xs font-bold text-white caxra-gradient caxra-glow hover:opacity-95 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
             >
-              <span>Submit & Receive Price Proposal</span>
-              <Send className="w-3.5 h-3.5" />
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Sending to sales@caxra.in...</span>
+                </>
+              ) : (
+                <>
+                  <span>Submit & Receive Price Proposal</span>
+                  <Send className="w-3.5 h-3.5" />
+                </>
+              )}
             </button>
 
             <p className="text-[10px] text-center text-slate-500">

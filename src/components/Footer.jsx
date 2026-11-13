@@ -112,8 +112,8 @@ export default function Footer({ onOpenQuote }) {
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-[#ff7026] flex-shrink-0" />
-                <a href="mailto:sales@caxra.com" className="hover:text-white transition-colors">
-                  sales@caxra.com
+                <a href="mailto:sales@caxra.in" className="hover:text-white transition-colors">
+                  sales@caxra.in
                 </a>
               </li>
             </ul>

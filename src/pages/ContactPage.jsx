@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle2, Clock, MessageSquare, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle2, Clock, MessageSquare, ArrowRight, ShieldCheck, Loader2 } from 'lucide-react';
+import { sendInquiryToSales } from '../services/contactService';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -13,10 +14,22 @@ export default function ContactPage() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setErrorMessage('');
+    try {
+      await sendInquiryToSales(formData);
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      setErrorMessage('Could not deliver automatically via network. Please email sales@caxra.in or call +91 99444 79115.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -94,11 +107,11 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <span className="font-bold block text-[#1f2853]">Email Inquiries</span>
-                      <a href="mailto:sales@caxra.com" className="text-xs text-[#ff7026] hover:underline font-bold block">
-                        sales@caxra.com
+                      <a href="mailto:sales@caxra.in" className="text-xs text-[#ff7026] hover:underline font-bold block">
+                        sales@caxra.in
                       </a>
-                      <a href="mailto:engineering@caxra.com" className="text-xs text-slate-500 hover:underline block">
-                        engineering@caxra.com
+                      <a href="mailto:engineering@caxra.in" className="text-xs text-slate-500 hover:underline block">
+                        engineering@caxra.in
                       </a>
                     </div>
                   </div>
@@ -289,12 +302,28 @@ export default function ContactPage() {
                       ></textarea>
                     </div>
 
+                    {errorMessage && (
+                      <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700">
+                        {errorMessage}
+                      </div>
+                    )}
+
                     <button
                       type="submit"
-                      className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-sm text-white caxra-gradient caxra-glow hover:opacity-95 transition-all shadow-md"
+                      disabled={isSubmitting}
+                      className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-sm text-white caxra-gradient caxra-glow hover:opacity-95 transition-all shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
                     >
-                      <span>Submit Machinery Request</span>
-                      <Send className="w-4 h-4" />
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span>Dispatching Inquiry to sales@caxra.in...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Submit Machinery Request</span>
+                          <Send className="w-4 h-4" />
+                        </>
+                      )}
                     </button>
 
                     <p className="text-[11px] text-center text-slate-500">
