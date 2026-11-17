@@ -1,6 +1,6 @@
 # Caxra Machine Systems - Google Apps Script Form Setup
 
-This setup allows your website to send customer inquiries directly to **sales@caxra.in** without needing any backend server or paying for email services.
+This setup allows your website to send customer inquiries directly to **info@caxra.in** without needing any backend server or paying for email services.
 
 ---
 
@@ -61,7 +61,7 @@ VITE_APPS_SCRIPT_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"
 ---
 
 ## 📩 What Happens When a Customer Submits the Form:
-1. An instant email is dispatched to **`sales@caxra.in`** containing:
+1. An instant email is dispatched to **`info@caxra.in`** containing:
    - Customer Full Name
    - Organization / Company
    - Official Email & Phone Number

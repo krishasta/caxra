@@ -28,7 +28,7 @@ export default function QuoteModal({ isOpen, onClose }) {
       setSubmitted(true);
     } catch (err) {
       console.error(err);
-      setErrorMessage('Could not deliver via network. Please email sales@caxra.in or call +91 99444 79115.');
+      setErrorMessage('Could not deliver via network. Please email info@caxra.in or call +91 99444 79115.');
     } finally {
       setIsSubmitting(false);
     }
@@ -211,7 +211,7 @@ export default function QuoteModal({ isOpen, onClose }) {
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Sending to sales@caxra.in...</span>
+                  <span>Sending to info@caxra.in...</span>
                 </>
               ) : (
                 <>

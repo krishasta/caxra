@@ -1,7 +1,7 @@
 /**
  * =========================================================================
  * CAXRA MACHINE SYSTEMS PVT LTD - LEAD & INQUIRY EMAIL DISPATCHER
- * Destination: sales@caxra.in
+ * Destination: info@caxra.in
  * =========================================================================
  *
  * HOW TO DEPLOY IN 2 MINUTES:
@@ -21,8 +21,8 @@
  *     VITE_APPS_SCRIPT_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"
  */
 
-// Target sales inbox
-var SALES_EMAIL = "sales@caxra.in";
+// Target inbox
+var SALES_EMAIL = "info@caxra.in";
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -54,7 +54,7 @@ function doPost(e) {
     var timestamp = data.timestamp || new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
 
     // Subject line
-    var subject = "🚨 New Machinery Inquiry: " + product + " - " + name + " (" + organization + ")";
+    var subject = "📝 New Machinery Inquiry: " + product + " - " + name + " (" + organization + ")";
 
     // Professional HTML Email Template
     var htmlBody = `

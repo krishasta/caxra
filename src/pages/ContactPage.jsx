@@ -26,7 +26,7 @@ export default function ContactPage() {
       setSubmitted(true);
     } catch (err) {
       console.error(err);
-      setErrorMessage('Could not deliver automatically via network. Please email sales@caxra.in or call +91 99444 79115.');
+      setErrorMessage('Could not deliver automatically via network. Please email info@caxra.in or call +91 99444 79115.');
     } finally {
       setIsSubmitting(false);
     }
@@ -107,8 +107,8 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <span className="font-bold block text-[#1f2853]">Email Inquiries</span>
-                      <a href="mailto:sales@caxra.in" className="text-xs text-[#ff7026] hover:underline font-bold block">
-                        sales@caxra.in
+                      <a href="mailto:info@caxra.in" className="text-xs text-[#ff7026] hover:underline font-bold block">
+                        info@caxra.in
                       </a>
                       <a href="mailto:engineering@caxra.in" className="text-xs text-slate-500 hover:underline block">
                         engineering@caxra.in
@@ -316,7 +316,7 @@ export default function ContactPage() {
                       {isSubmitting ? (
                         <>
                           <Loader2 className="w-4 h-4 animate-spin" />
-                          <span>Dispatching Inquiry to sales@caxra.in...</span>
+                          <span>Dispatching Inquiry to info@caxra.in...</span>
                         </>
                       ) : (
                         <>
