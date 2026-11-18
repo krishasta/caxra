@@ -1,7 +1,7 @@
 /**
  * =========================================================================
  * CAXRA MACHINE SYSTEMS PVT LTD - LEAD & INQUIRY EMAIL DISPATCHER
- * Destination: info@caxra.in
+ * Destination: info@caxra.in, caxramachine@gmail.com
  * =========================================================================
  *
  * HOW TO DEPLOY IN 2 MINUTES:
@@ -21,8 +21,8 @@
  *     VITE_APPS_SCRIPT_URL="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"
  */
 
-// Target inbox
-var SALES_EMAIL = "info@caxra.in";
+// Target notification inboxes (both will receive customer inquiries)
+var NOTIFICATION_EMAILS = "info@caxra.in, caxramachine@gmail.com";
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -131,7 +131,7 @@ function doPost(e) {
 
     // Send the email via Google Apps Script MailApp
     MailApp.sendEmail({
-      to: SALES_EMAIL,
+      to: NOTIFICATION_EMAILS,
       replyTo: email,
       subject: subject,
       htmlBody: htmlBody
@@ -176,7 +176,7 @@ function doGet(e) {
   return ContentService.createTextOutput(JSON.stringify({
     status: "online",
     service: "Caxra Machine Systems Lead Dispatcher",
-    destination: SALES_EMAIL
+    destinations: NOTIFICATION_EMAILS
   })).setMimeType(ContentService.MimeType.JSON);
 }
 

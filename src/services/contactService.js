@@ -1,7 +1,7 @@
 /**
  * Caxra Machine Systems - Form Submission Service
  * Sends customer inquiries to Google Apps Script Web App,
- * which delivers the notification email directly to info@caxra.in.
+ * which delivers the notification email directly to info@caxra.in and caxramachine@gmail.com.
  */
 
 export const APPS_SCRIPT_URL = 
@@ -25,7 +25,7 @@ export async function sendInquiryToSales(data) {
     formData.append(key, data[key] || '');
   });
   formData.append('timestamp', new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
-  formData.append('targetEmail', 'info@caxra.in');
+  formData.append('targetEmail', 'info@caxra.in, caxramachine@gmail.com');
 
   try {
     // Google Apps Script redirect handled via 'no-cors'
